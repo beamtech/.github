@@ -1,9 +1,12 @@
 # Default Community Health Files
 
-These files help standardize pull request templates, issue templates, and potential code of conduct
-and contributing documents for all repos in beamtech. 
+This repo intends to standardize: 
 
-For more information reference: 
-https://help.github.com/en/articles/creating-a-default-community-health-file-for-your-organization
+- Pull Request templates
+- Issue templates
+- Contributing documentation
+- Code of conduct documentation
+
+For more information, reference GitHub's [documentation](https://help.github.com/en/articles/creating-a-default-community-health-file-for-your-organization) on `.github` repos and community health files
 
 Any singular repo can choose to override these default files with templates of their own. 
