@@ -1,5 +1,7 @@
 #### [JIRA Issue](https://beamdental.atlassian.net/browse/PW-418)
 
+#### Ephemeral Environment or Staging Link: 
+
 ## Context
 
 Short description of the problem or opportunity for improvement
@@ -12,7 +14,11 @@ Short description of the problem or opportunity for improvement
 
 ## Validation
 
-How would a reviewer validate your changes
+- Steps to reproduce issue (required if it's tech debt or a bug)
+- Steps to see the acceptance criteria (required)
+- Full workflow and additional screens affected (recommended)
+- Test Cases (required)
+- Edge Cases (all known edge cases are required)
 
 ## Post-deploy plan
 
