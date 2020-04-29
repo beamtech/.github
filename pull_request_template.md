@@ -20,6 +20,11 @@ Short description of the problem or opportunity for improvement
 - Test Cases (required)
 - Edge Cases (all known edge cases are required)
 
+#### [How to QA](https://beamdental.atlassian.net/wiki/spaces/ENG/pages/230293509/How+to+QA)
+
 ## Post-deploy plan
 
-#### [How to QA](https://beamdental.atlassian.net/wiki/spaces/ENG/pages/230293509/How+to+QA)
+- [ ] Manually validate the change in production if applicable
+- [ ] Monitor #rollbar-errors for new events
+- [ ] Add more specific steps based on the change
+
