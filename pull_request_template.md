@@ -20,6 +20,12 @@ Short description of the problem or opportunity for improvement
 - Test Cases (required)
 - Edge Cases (all known edge cases are required)
 
+## E2E tests
+
+- [ ] Changes/additions made to [E2E tests](https://github.com/beamtech/e2e-tests), if applicable
+
+Check out the [README in the E2E repo](https://github.com/beamtech/e2e-tests/blob/main/README.md) for more info on how to run E2E tests locally or remotely in an ephemeral.
+
 ## Post-deploy plan
 
 #### [How to QA](https://beamdental.atlassian.net/wiki/spaces/ENG/pages/230293509/How+to+QA)
