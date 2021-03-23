@@ -1,7 +1,11 @@
 const github = require("@actions/github");
+const core = require("@actions/core");
+
+const githubToken = core.getInput("githubToken");
+const octokit = github.getOctokit(githubToken);
 
 const postMessage = async (msg) => {
-  await github.issues.createComment({
+  await octokit.issues.createComment({
     issue_number: context.issue.number,
     owner: context.repo.owner,
     repo: context.repo.repo,
@@ -18,7 +22,7 @@ const fail = async (msg) => {
 };
 
 const getComments = async () =>
-  github.issues.listComments({
+  octokit.issues.listComments({
     owner: context.repo.owner,
     repo: context.repo.repo,
     issue_number: context.payload.number,
@@ -38,7 +42,7 @@ const deletePreviousComments = async () =>
     comments.map((c) => {
       if (c.body.indexOf("E2E status check") > -1) {
         console.log("deleting comment", c.id);
-        github.issues.deleteComment({
+        octokit.issues.deleteComment({
           owner: context.repo.owner,
           repo: context.repo.repo,
           comment_id: c.id,
@@ -48,7 +52,7 @@ const deletePreviousComments = async () =>
   );
 
 const getCommits = async () =>
-  github.pulls.listCommits({
+  octokit.pulls.listCommits({
     owner: context.repo.owner,
     repo: context.repo.repo,
     pull_number: context.payload.number,
