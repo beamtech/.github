@@ -23,21 +23,14 @@ const fail = async (msg) => {
   process.exit(1);
 };
 
-const getComments = async () => {
-  const result = await octokit.issues.listComments({
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-    issue_number: context.payload.number,
-  });
-  console.log(
-    "aaa",
-    context.repo.owner,
-    context.repo.repo,
-    context.payload.number,
-    result
-  );
-  return result.data;
-};
+const getComments = async () =>
+  (
+    await octokit.issues.listComments({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      issue_number: context.payload.number,
+    })
+  ).data;
 
 const getLatestE2Ecomment = (comments) =>
   comments
@@ -48,7 +41,7 @@ const getLatestE2Ecomment = (comments) =>
       return 0;
     })[0];
 
-const deletePreviousComments = async () =>
+const deletePreviousComments = async (comments) =>
   Promise.all(
     comments.map((c) => {
       if (c.body.indexOf("E2E status check") > -1) {
@@ -74,7 +67,7 @@ const getCommits = async () =>
 const run = async () => {
   const comments = await getComments();
   const latestE2EComment = getLatestE2Ecomment(comments);
-  await deletePreviousComments();
+  await deletePreviousComments(comments);
   const commits = await getCommits();
 
   if (!latestE2EComment) {
