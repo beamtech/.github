@@ -1,0 +1,13 @@
+name: E2E Check
+
+on: [pull_request]
+
+jobs:
+  test-action:
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            console.log('hello world')
