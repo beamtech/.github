@@ -23,12 +23,21 @@ const fail = async (msg) => {
   process.exit(1);
 };
 
-const getComments = async () =>
-  octokit.issues.listComments({
+const getComments = async () => {
+  const result = octokit.issues.listComments({
     owner: context.repo.owner,
     repo: context.repo.repo,
     issue_number: context.payload.number,
-  }).data;
+  });
+  console.log(
+    "aaa",
+    context.repo.owner,
+    context.repo.repo,
+    context.payload.number,
+    result
+  );
+  return result.data;
+};
 
 const getLatestE2Ecomment = (comments) =>
   comments
