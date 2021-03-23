@@ -1,3 +1,5 @@
+const github = require("@actions/github");
+
 const postMessage = async (msg) => {
   await github.issues.createComment({
     issue_number: context.issue.number,
