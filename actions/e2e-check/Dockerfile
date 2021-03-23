@@ -1,4 +1,4 @@
 FROM node:slim
 COPY . .
 RUN npm install
-ENTRYPOINT ["node", "./main.js"]
+ENTRYPOINT ["node", "/actions/e2e-check/main.js"]
