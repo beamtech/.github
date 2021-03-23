@@ -24,7 +24,7 @@ const fail = async (msg) => {
 };
 
 const getComments = async () => {
-  const result = octokit.issues.listComments({
+  const result = await octokit.issues.listComments({
     owner: context.repo.owner,
     repo: context.repo.repo,
     issue_number: context.payload.number,
@@ -63,11 +63,13 @@ const deletePreviousComments = async () =>
   );
 
 const getCommits = async () =>
-  octokit.pulls.listCommits({
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-    pull_number: context.payload.number,
-  }).data;
+  (
+    await octokit.pulls.listCommits({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      pull_number: context.payload.number,
+    })
+  ).data;
 
 const run = async () => {
   const comments = await getComments();
