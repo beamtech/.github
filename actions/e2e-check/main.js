@@ -34,7 +34,7 @@ const getComments = async () =>
 
 const getLatestE2Ecomment = comments =>
   comments
-    .filter(c => c.body.trim().indexOf('e2e ') === 0)
+    .filter(c => c.body.trim().startsWith('e2e start'))
     .sort(function (a, b) {
       if (a.created_at < b.created_at) return 1
       if (a.created_at > b.created_at) return -1
