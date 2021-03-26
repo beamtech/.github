@@ -64,7 +64,7 @@ const run = async () => {
     ? commits.filter(c => c.commit.committer.date > latestE2EComment.created_at)
     : []
 
-  const updateStatus = async msg => {
+  const updateStatusComment = async msg => {
     const commonOpts = {
       owner,
       repo,
@@ -81,28 +81,39 @@ const run = async () => {
         })
   }
 
-  const warn = async msg => updateStatus(`⚠️ ${msg}`)
-
-  const fail = async msg => {
-    await updateStatus(`❌ ${msg} ${INSTRUCTIONS}`)
-    return octokit.rest.repos.createCommitStatus({
+  const updateStatus = async (state, msg) =>
+    octokit.rest.repos.createCommitStatus({
       owner,
       repo,
       sha: commits[commits.length - 1].sha,
-      state: 'error',
+      state,
       description: msg,
       context: 'e2e-status',
     })
+
+  const warn = async msg => {
+    await updateStatusComment(`⚠️ ${msg} ${INSTRUCTIONS}`)
+    return updateStatus('success')
   }
 
-  if (shouldIgnore) return deleteComment(previousStatusComment)
+  const fail = async msg => {
+    await updateStatusComment(`❌ ${msg} ${INSTRUCTIONS}`)
+    return updateStatus('error', msg)
+  }
+
+  const clear = async () => {
+    await deleteComment(previousStatusComment)
+    return updateStatus('success', '')
+  }
+
+  if (shouldIgnore) return clear()
 
   if (!latestE2EComment) return fail('E2E has not been run on this PR.')
 
   if (commitsAfterE2EComment.length)
     return warn('Commits have been pushed since E2E was last run on this PR.')
 
-  return deleteComment(previousStatusComment)
+  return clear()
 }
 
 run()
