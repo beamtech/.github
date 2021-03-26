@@ -85,11 +85,11 @@ const run = async () => {
 
   const fail = async msg => {
     await updateStatus(`❌ ${msg} ${INSTRUCTIONS}`)
-    console.log('hey', context.sha)
+    console.log('hey', commits[commits.length - 1])
     const stuff = await octokit.rest.repos.createCommitStatus({
       owner,
       repo,
-      sha: context.sha,
+      sha: commits[commits.length - 1].sha,
       state: 'error',
       description: 'something',
       context: 'e2e-status-check',
