@@ -85,7 +85,8 @@ const run = async () => {
 
   const fail = async msg => {
     await updateStatus(`❌ ${msg} ${INSTRUCTIONS}`)
-    octokit.rest.repos.createCommitStatus({
+    console.log('hey', context.sha)
+    return octokit.rest.repos.createCommitStatus({
       owner,
       repo,
       sha: context.sha,
