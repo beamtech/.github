@@ -1,0 +1,7 @@
+{
+  "name": "beam-github",
+  "repository": "git@github.com:beamtech/.github.git",
+  "dependencies": {
+    "@beam-tech/eslint-config": "^5.0.2"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "e2e-check-action",
+  "main": "main.js",
+  "private": true,
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/github": "^4.0.0"
+  }
+}
