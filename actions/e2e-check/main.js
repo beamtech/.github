@@ -7,24 +7,9 @@ const githubToken = core.getInput('githubToken')
 const octokit = github.getOctokit(githubToken)
 
 const TRIGGER_COMMAND = 'e2e start'
+const IGNORE_COMMAND = 'e2e ignore'
 const STATUS_MARKER = '::E2E Check::'
-
-const postMessage = async msg => {
-  await octokit.issues.createComment({
-    issue_number: context.issue.number,
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-    body: `${msg} - ${STATUS_MARKER}`,
-  })
-}
-
-const warn = postMessage
-
-const fail = async msg => {
-  await postMessage(msg)
-  console.error(msg)
-  process.exit(1)
-}
+const INSTRUCTIONS = `If E2E is needed for this PR, please run it by commenting \`${TRIGGER_COMMAND} <options>\`. If this PR will not need E2E, you can ignore any future notifications by commenting \`${IGNORE_COMMAND}\`.`
 
 const getComments = async () =>
   (
@@ -44,19 +29,16 @@ const getLatestE2Ecomment = comments =>
       return 0
     })[0]
 
-const deletePreviousComments = async comments =>
-  Promise.all(
-    comments.map(c => {
-      if (c.body.indexOf(STATUS_MARKER) > -1) {
-        console.log('deleting comment', c.id)
-        octokit.issues.deleteComment({
-          owner: context.repo.owner,
-          repo: context.repo.repo,
-          comment_id: c.id,
-        })
-      }
-    }),
-  )
+const deleteComment = async c => {
+  if (c) {
+    console.log('deleting comment', c.id)
+    return octokit.issues.deleteComment({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      comment_id: c.id,
+    })
+  }
+}
 
 const getCommits = async () =>
   (
@@ -69,24 +51,51 @@ const getCommits = async () =>
 
 const run = async () => {
   const comments = await getComments()
+  const previousStatusComment = comments.find(
+    c => c.body.indexOf(STATUS_MARKER) > -1,
+  )
+  const shouldIgnore = !!comments.find(c =>
+    c.body.trim().startsWith(IGNORE_COMMAND),
+  )
   const latestE2EComment = getLatestE2Ecomment(comments)
-  await deletePreviousComments(comments)
   const commits = await getCommits()
+  const commitsAfterE2EComment = latestE2EComment
+    ? commits.filter(c => c.commit.committer.date > latestE2EComment.created_at)
+    : []
 
-  if (!latestE2EComment) {
-    await fail(
-      `❌ E2E has not been run on this PR. If E2E is needed for this PR, please run it by commenting \`${TRIGGER_COMMAND} <options>\``,
-    )
-  } else {
-    const commitsAfterE2EComment = commits.filter(
-      c => c.commit.committer.date > latestE2EComment.created_at,
-    )
-    if (commitsAfterE2EComment.length) {
-      await warn(
-        `⚠️ Commits have been pushed since E2E was last run on this PR. If E2E is needed for this PR, please run it again by commenting \`${TRIGGER_COMMAND} <options>\`.`,
-      )
+  const updateStatus = async msg => {
+    const commonOpts = {
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      body: `${msg} - ${STATUS_MARKER}`,
     }
+    return previousStatusComment
+      ? octokit.issues.updateComment({
+          ...commonOpts,
+          comment_id: previousStatusComment.id,
+        })
+      : octokit.issues.createComment({
+          ...commonOpts,
+          issue_number: context.issue.number,
+        })
   }
+
+  const warn = async msg => updateStatus(`⚠️ ${msg}`)
+
+  const fail = async msg => {
+    await updateStatus(`❌ ${msg} ${INSTRUCTIONS}`)
+    console.error(msg)
+    process.exit(1)
+  }
+
+  if (shouldIgnore) return deleteComment(previousStatusComment)
+
+  if (!latestE2EComment) return fail('E2E has not been run on this PR.')
+
+  if (commitsAfterE2EComment.length)
+    return warn('Commits have been pushed since E2E was last run on this PR.')
+
+  return deleteComment(previousStatusComment)
 }
 
 run()
