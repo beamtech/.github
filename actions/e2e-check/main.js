@@ -90,8 +90,8 @@ const run = async () => {
       repo,
       sha: commits[commits.length - 1].sha,
       state: 'error',
-      description: `${msg} ${INSTRUCTIONS}`,
-      context: 'e2e-status-check',
+      description: msg,
+      context: 'e2e-status',
     })
     console.log('result', stuff)
   }
