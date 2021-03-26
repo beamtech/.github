@@ -2,6 +2,7 @@ const github = require('@actions/github')
 const core = require('@actions/core')
 
 const { context } = github
+const { owner, repo } = context.repo
 
 const githubToken = core.getInput('githubToken')
 const octokit = github.getOctokit(githubToken)
@@ -14,8 +15,8 @@ const INSTRUCTIONS = `If E2E is needed for this PR, please run it by commenting 
 const getComments = async () =>
   (
     await octokit.issues.listComments({
-      owner: context.repo.owner,
-      repo: context.repo.repo,
+      owner,
+      repo,
       issue_number: context.payload.number,
     })
   ).data
@@ -33,8 +34,8 @@ const deleteComment = async c => {
   if (c) {
     console.log('deleting comment', c.id)
     return octokit.issues.deleteComment({
-      owner: context.repo.owner,
-      repo: context.repo.repo,
+      owner,
+      repo,
       comment_id: c.id,
     })
   }
@@ -43,8 +44,8 @@ const deleteComment = async c => {
 const getCommits = async () =>
   (
     await octokit.pulls.listCommits({
-      owner: context.repo.owner,
-      repo: context.repo.repo,
+      owner,
+      repo,
       pull_number: context.payload.number,
     })
   ).data
@@ -65,8 +66,8 @@ const run = async () => {
 
   const updateStatus = async msg => {
     const commonOpts = {
-      owner: context.repo.owner,
-      repo: context.repo.repo,
+      owner,
+      repo,
       body: `${msg} - ${STATUS_MARKER}`,
     }
     return previousStatusComment
@@ -84,8 +85,14 @@ const run = async () => {
 
   const fail = async msg => {
     await updateStatus(`❌ ${msg} ${INSTRUCTIONS}`)
-    console.error(msg)
-    process.exit(1)
+    octokit.rest.repos.createCommitStatus({
+      owner,
+      repo,
+      sha: context.sha,
+      state: 'error',
+      description: 'something',
+      context: 'e2e-status-check',
+    })
   }
 
   if (shouldIgnore) return deleteComment(previousStatusComment)
