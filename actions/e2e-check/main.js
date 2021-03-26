@@ -86,7 +86,7 @@ const run = async () => {
   const fail = async msg => {
     await updateStatus(`❌ ${msg} ${INSTRUCTIONS}`)
     console.log('hey', context.sha)
-    return octokit.rest.repos.createCommitStatus({
+    const stuff = await octokit.rest.repos.createCommitStatus({
       owner,
       repo,
       sha: context.sha,
@@ -94,6 +94,7 @@ const run = async () => {
       description: 'something',
       context: 'e2e-status-check',
     })
+    console.log('result', stuff)
   }
 
   if (shouldIgnore) return deleteComment(previousStatusComment)
