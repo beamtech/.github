@@ -6,12 +6,15 @@ const { context } = github
 const githubToken = core.getInput('githubToken')
 const octokit = github.getOctokit(githubToken)
 
+const TRIGGER_COMMAND = 'e2e start'
+const STATUS_MARKER = '::E2E Check::'
+
 const postMessage = async msg => {
   await octokit.issues.createComment({
     issue_number: context.issue.number,
     owner: context.repo.owner,
     repo: context.repo.repo,
-    body: `${msg} (E2E status check)`,
+    body: `${msg} - ${STATUS_MARKER}`,
   })
 }
 
@@ -34,7 +37,7 @@ const getComments = async () =>
 
 const getLatestE2Ecomment = comments =>
   comments
-    .filter(c => c.body.trim().startsWith('e2e start'))
+    .filter(c => c.body.trim().startsWith(TRIGGER_COMMAND))
     .sort(function (a, b) {
       if (a.created_at < b.created_at) return 1
       if (a.created_at > b.created_at) return -1
@@ -44,7 +47,7 @@ const getLatestE2Ecomment = comments =>
 const deletePreviousComments = async comments =>
   Promise.all(
     comments.map(c => {
-      if (c.body.indexOf('E2E status check') > -1) {
+      if (c.body.indexOf(STATUS_MARKER) > -1) {
         console.log('deleting comment', c.id)
         octokit.issues.deleteComment({
           owner: context.repo.owner,
@@ -72,7 +75,7 @@ const run = async () => {
 
   if (!latestE2EComment) {
     await fail(
-      '❌ E2E has not been run on this PR. If E2E is needed for this PR, please run it by commenting `e2e start <options>`',
+      `❌ E2E has not been run on this PR. If E2E is needed for this PR, please run it by commenting \`${TRIGGER_COMMAND} <options>\``,
     )
   } else {
     const commitsAfterE2EComment = commits.filter(
@@ -80,7 +83,7 @@ const run = async () => {
     )
     if (commitsAfterE2EComment.length) {
       await warn(
-        '⚠️ Commits have been pushed since E2E was last run on this PR. If E2E is needed for this PR, please run it again by commenting `e2e start <options>`.',
+        `⚠️ Commits have been pushed since E2E was last run on this PR. If E2E is needed for this PR, please run it again by commenting \`${TRIGGER_COMMAND} <options>\`.`,
       )
     }
   }
