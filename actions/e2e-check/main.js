@@ -12,12 +12,15 @@ const IGNORE_COMMAND = 'e2e ignore'
 const STATUS_MARKER = '::E2E Check::'
 const INSTRUCTIONS = `If E2E is needed for this PR, please run it by commenting \`${TRIGGER_COMMAND} <options>\`. If this PR will not need E2E, you can ignore any future notifications by commenting \`${IGNORE_COMMAND}\`.`
 
+console.log(context)
+const issue_number = context.payload.number || github.event.issue.number
+
 const getComments = async () =>
   (
     await octokit.issues.listComments({
       owner,
       repo,
-      issue_number: context.payload.number,
+      issue_number,
     })
   ).data
 
@@ -46,7 +49,7 @@ const getCommits = async () =>
     await octokit.pulls.listCommits({
       owner,
       repo,
-      pull_number: context.payload.number,
+      pull_number: issue_number,
     })
   ).data
 
