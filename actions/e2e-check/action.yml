@@ -1,5 +1,9 @@
-name: "E2E Check"
-description: "Check whether E2E has been run on a PR"
+name: 'E2E Check'
+description: 'Check whether E2E has been run on a PR'
 runs:
-  using: "docker"
-  image: "Dockerfile"
+  using: 'docker'
+  image: 'Dockerfile'
+inputs:
+  githubToken:
+    description: 'Github token'
+    required: true
