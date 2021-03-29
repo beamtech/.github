@@ -2,35 +2,21 @@ const github = require('@actions/github')
 const core = require('@actions/core')
 
 const { context } = github
+const { owner, repo } = context.repo
 
 const githubToken = core.getInput('githubToken')
 const octokit = github.getOctokit(githubToken)
 
 const TRIGGER_COMMAND = 'e2e start'
+const IGNORE_COMMAND = 'e2e ignore'
 const STATUS_MARKER = '::E2E Check::'
-
-const postMessage = async msg => {
-  await octokit.issues.createComment({
-    issue_number: context.issue.number,
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-    body: `${msg} - ${STATUS_MARKER}`,
-  })
-}
-
-const warn = postMessage
-
-const fail = async msg => {
-  await postMessage(msg)
-  console.error(msg)
-  process.exit(1)
-}
+const INSTRUCTIONS = `If E2E is needed for this PR, please run it by commenting \`${TRIGGER_COMMAND} <options>\`. If this PR will not need E2E, you can ignore any future notifications by commenting \`${IGNORE_COMMAND}\`.`
 
 const getComments = async () =>
   (
     await octokit.issues.listComments({
-      owner: context.repo.owner,
-      repo: context.repo.repo,
+      owner,
+      repo,
       issue_number: context.payload.number,
     })
   ).data
@@ -44,49 +30,90 @@ const getLatestE2Ecomment = comments =>
       return 0
     })[0]
 
-const deletePreviousComments = async comments =>
-  Promise.all(
-    comments.map(c => {
-      if (c.body.indexOf(STATUS_MARKER) > -1) {
-        console.log('deleting comment', c.id)
-        octokit.issues.deleteComment({
-          owner: context.repo.owner,
-          repo: context.repo.repo,
-          comment_id: c.id,
-        })
-      }
-    }),
-  )
+const deleteComment = async c => {
+  if (c) {
+    console.log('deleting comment', c.id)
+    return octokit.issues.deleteComment({
+      owner,
+      repo,
+      comment_id: c.id,
+    })
+  }
+}
 
 const getCommits = async () =>
   (
     await octokit.pulls.listCommits({
-      owner: context.repo.owner,
-      repo: context.repo.repo,
+      owner,
+      repo,
       pull_number: context.payload.number,
     })
   ).data
 
 const run = async () => {
   const comments = await getComments()
+  const previousStatusComment = comments.find(
+    c => c.body.indexOf(STATUS_MARKER) > -1,
+  )
+  const shouldIgnore = !!comments.find(c =>
+    c.body.trim().startsWith(IGNORE_COMMAND),
+  )
   const latestE2EComment = getLatestE2Ecomment(comments)
-  await deletePreviousComments(comments)
   const commits = await getCommits()
+  const commitsAfterE2EComment = latestE2EComment
+    ? commits.filter(c => c.commit.committer.date > latestE2EComment.created_at)
+    : []
 
-  if (!latestE2EComment) {
-    await fail(
-      `❌ E2E has not been run on this PR. If E2E is needed for this PR, please run it by commenting \`${TRIGGER_COMMAND} <options>\``,
-    )
-  } else {
-    const commitsAfterE2EComment = commits.filter(
-      c => c.commit.committer.date > latestE2EComment.created_at,
-    )
-    if (commitsAfterE2EComment.length) {
-      await warn(
-        `⚠️ Commits have been pushed since E2E was last run on this PR. If E2E is needed for this PR, please run it again by commenting \`${TRIGGER_COMMAND} <options>\`.`,
-      )
+  const updateStatusComment = async msg => {
+    const commonOpts = {
+      owner,
+      repo,
+      body: `${msg} - ${STATUS_MARKER}`,
     }
+    return previousStatusComment
+      ? octokit.issues.updateComment({
+          ...commonOpts,
+          comment_id: previousStatusComment.id,
+        })
+      : octokit.issues.createComment({
+          ...commonOpts,
+          issue_number: context.issue.number,
+        })
   }
+
+  const updateStatus = async (state, msg) =>
+    octokit.rest.repos.createCommitStatus({
+      owner,
+      repo,
+      sha: commits[commits.length - 1].sha,
+      state,
+      description: msg,
+      context: 'e2e-status',
+    })
+
+  const warn = async msg => {
+    await updateStatusComment(`⚠️ ${msg} ${INSTRUCTIONS}`)
+    return updateStatus('success')
+  }
+
+  const fail = async msg => {
+    await updateStatusComment(`❌ ${msg} ${INSTRUCTIONS}`)
+    return updateStatus('error', msg)
+  }
+
+  const clear = async () => {
+    await deleteComment(previousStatusComment)
+    return updateStatus('success', '')
+  }
+
+  if (shouldIgnore) return clear()
+
+  if (!latestE2EComment) return fail('E2E has not been run on this PR.')
+
+  if (commitsAfterE2EComment.length)
+    return warn('Commits have been pushed since E2E was last run on this PR.')
+
+  return clear()
 }
 
 run()
