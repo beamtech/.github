@@ -12,11 +12,20 @@ const IGNORE_COMMAND = 'e2e ignore'
 const STATUS_MARKER = '::E2E Check::'
 const INSTRUCTIONS = `If E2E is needed for this PR, please run it by commenting \`${TRIGGER_COMMAND} <options>\`. If this PR will not need E2E, you can ignore any future notifications by commenting \`${IGNORE_COMMAND}\`.`
 
-console.log(
-  context,
-  context.payload.pull_request && context.payload.pull_request.head,
-)
+const IGNORE_BRANCH_PREFIXES = ['dependabot/', 'renovate/']
+
+console.log(context)
 const issue_number = context.payload.number || context.issue.number
+const branchName =
+  context.payload.pull_request &&
+  context.payload.pull_request.head &&
+  context.payload.pull_request.head.ref
+const shouldIgnoreBranch =
+  branchName &&
+  (IGNORE_BRANCH_PREFIXES.find(prefix => branchName.startsWith(prefix)) ||
+    branchName.indexOf('skip-e2e/') > -1)
+
+console.log(branchName)
 
 const getComments = async () =>
   (
@@ -112,7 +121,7 @@ const run = async () => {
     return updateStatus('success', '')
   }
 
-  if (shouldIgnore) return clear()
+  if (shouldIgnore || shouldIgnoreBranch) return clear()
 
   if (!latestE2EComment) return fail('E2E has not been run on this PR.')
 
