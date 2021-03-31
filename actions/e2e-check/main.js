@@ -22,7 +22,8 @@ const branchName =
   context.payload.pull_request.head.ref
 const shouldIgnoreBranch =
   branchName &&
-  IGNORE_BRANCH_PREFIXES.find(prefix => branchName.startsWith(prefix))
+  (IGNORE_BRANCH_PREFIXES.find(prefix => branchName.startsWith(prefix)) ||
+    branchName.indexOf('skip-e2e/') > -1)
 
 console.log(branchName)
 
