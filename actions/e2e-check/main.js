@@ -24,6 +24,8 @@ const shouldIgnoreBranch =
   branchName &&
   IGNORE_BRANCH_PREFIXES.find(prefix => branchName.startsWith(prefix))
 
+console.log(branchName)
+
 const getComments = async () =>
   (
     await octokit.issues.listComments({
