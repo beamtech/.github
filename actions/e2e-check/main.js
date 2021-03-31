@@ -17,7 +17,9 @@ const IGNORE_BRANCH_PREFIXES = ['dependabot/', 'renovate/']
 console.log(context)
 const issue_number = context.payload.number || context.issue.number
 const branchName =
-  context.payload.pull_request && context.payload.pull_request.head
+  context.payload.pull_request &&
+  context.payload.pull_request.head &&
+  context.payload.pull_request.head.ref
 const shouldIgnoreBranch =
   branchName &&
   IGNORE_BRANCH_PREFIXES.find(prefix => branchName.startsWith(prefix))
