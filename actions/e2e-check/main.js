@@ -12,7 +12,10 @@ const IGNORE_COMMAND = 'e2e ignore'
 const STATUS_MARKER = '::E2E Check::'
 const INSTRUCTIONS = `If E2E is needed for this PR, please run it by commenting \`${TRIGGER_COMMAND} <options>\`. If this PR will not need E2E, you can ignore any future notifications by commenting \`${IGNORE_COMMAND}\`.`
 
-console.log(context, github)
+console.log(
+  context,
+  context.payload.pull_request && context.payload.pull_request.head,
+)
 const issue_number = context.payload.number || context.issue.number
 
 const getComments = async () =>
