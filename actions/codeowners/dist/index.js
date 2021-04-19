@@ -6073,18 +6073,20 @@ const ownerAndRepo = {
   repo: context.repo.repo,
 }
 
+const issue_number = context.payload.number || context.issue.number
+
 const pullParams = {
   ...ownerAndRepo,
-  pull_number: context.issue.number,
+  pull_number: issue_number,
 }
 
 const run = async () => {
-  const labels = (
-    await octokit.issues.listLabelsOnIssue({
-      ...ownerAndRepo,
-      issue_number: context.issue.number,
-    })
-  ).data.map(l => l.name)
+  const listLabelsOnIssue = await octokit.issues.listLabelsOnIssue({
+    ...ownerAndRepo,
+    issue_number: issue_number,
+  })
+  console.log(listLabelsOnIssue)
+  const labels = listLabelsOnIssue.data.map(l => l.name)
   console.log(labels)
   const specificRequestedTeam =
     context.payload &&
