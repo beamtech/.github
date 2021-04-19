@@ -6095,7 +6095,7 @@ const run = async () => {
     context.payload.requested_team.name
   const requestedReviewers = specificRequestedTeam
     ? [specificRequestedTeam]
-    : await octokit.rest.pulls.listRequestedReviewers(pullParams)
+    : (await octokit.rest.pulls.listRequestedReviewers(pullParams)).data.teams
   console.log('requestedReviewers', requestedReviewers)
   // console.log(
   //   await octokit.rest.pulls.requestReviewers({
