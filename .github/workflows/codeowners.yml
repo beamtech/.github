@@ -8,4 +8,4 @@ jobs:
     steps:
       - uses: beamtech/.github/actions/codeowners@add-codeowners-action
         with:
-          githubToken: ${{secrets.SERVICE_ACCOUNT_GITHUB_TOKEN}}
+          githubToken: ${{secrets.RENOVATE_TOKEN}}
