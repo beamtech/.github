@@ -8,6 +8,17 @@ importers:
     dependencies:
       '@beam-tech/eslint-config': 5.0.2
 
+  actions/codeowners:
+    specifiers:
+      '@actions/core': ^1.2.6
+      '@actions/github': ^4.0.0
+      '@vercel/ncc': ^0.28.3
+    dependencies:
+      '@actions/core': 1.2.7
+      '@actions/github': 4.0.0
+    devDependencies:
+      '@vercel/ncc': 0.28.3
+
   actions/e2e-check:
     specifiers:
       '@actions/core': ^1.2.6

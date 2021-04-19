@@ -1,0 +1,15 @@
+{
+  "name": "e2e-check-action",
+  "main": "dist/index.js",
+  "private": true,
+  "scripts": {
+    "build": "ncc build index.js"
+  },
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/github": "^4.0.0"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.28.3"
+  }
+}

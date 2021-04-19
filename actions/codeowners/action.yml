@@ -1,0 +1,9 @@
+name: 'Codeowners'
+description: 'No description yet'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+inputs:
+  githubToken:
+    description: 'Github token'
+    required: true
