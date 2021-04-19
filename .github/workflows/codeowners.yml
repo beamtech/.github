@@ -1,7 +1,8 @@
 name: Codeowners
 
-on: [pull_request]
-
+on:
+  schedule:
+    - cron: '*/1 * * * *'
 jobs:
   codeowners:
     runs-on: [ubuntu-latest]
