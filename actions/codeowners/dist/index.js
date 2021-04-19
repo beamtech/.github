@@ -2,7 +2,7 @@
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 432:
-/***/ (() => {
+/***/ ((module) => {
 
 const rules = [
   {
@@ -13,6 +13,8 @@ const rules = [
     delayMinutes: 15,
   },
 ]
+
+module.exports = rules
 
 
 /***/ }),

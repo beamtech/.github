@@ -7,3 +7,5 @@ const rules = [
     delayMinutes: 15,
   },
 ]
+
+module.exports = rules
