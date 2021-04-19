@@ -2,7 +2,7 @@ name: Codeowners
 
 on:
   schedule:
-    - cron: '* * * * *'
+    - cron: '*/15 * * * *'
 
 jobs:
   codeowners:
