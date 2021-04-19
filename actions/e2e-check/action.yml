@@ -1,8 +1,8 @@
 name: 'E2E Check'
 description: 'Check whether E2E has been run on a PR'
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: 'node12'
+  main: 'dist/index.js'
 inputs:
   githubToken:
     description: 'Github token'

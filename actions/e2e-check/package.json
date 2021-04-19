@@ -2,8 +2,14 @@
   "name": "e2e-check-action",
   "main": "main.js",
   "private": true,
+  "scripts": {
+    "ncc": "ncc"
+  },
   "dependencies": {
     "@actions/core": "^1.2.6",
     "@actions/github": "^4.0.0"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.28.3"
   }
 }
