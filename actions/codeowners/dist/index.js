@@ -7,8 +7,8 @@
 const rules = [
   {
     botName: 'ownership_bot_test',
-    ignoreLabels: ['block-automerge'],
-    includeLabels: ['enhancement'],
+    ignoreLabels: ['wip'],
+    includeLabels: ['ready-for-review'],
     memberTeamName: 'ownership_test',
     delayMinutes: 15,
   },
