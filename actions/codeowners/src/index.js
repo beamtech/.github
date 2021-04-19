@@ -20,15 +20,15 @@ const pullParams = {
   pull_number: issue_number,
 }
 
+console.log(context)
+
 const run = async () => {
-  console.log(issue_number, ownerAndRepo)
   const listLabelsOnIssue = await octokit.issues.listLabelsOnIssue({
     ...ownerAndRepo,
     issue_number,
   })
-  console.log(listLabelsOnIssue)
   const labels = listLabelsOnIssue.data.map(l => l.name)
-  console.log(labels)
+
   const specificRequestedTeam =
     context.payload &&
     context.payload.requested_team &&
@@ -38,7 +38,20 @@ const run = async () => {
     : (
         await octokit.rest.pulls.listRequestedReviewers(pullParams)
       ).data.teams.map(t => t.name)
-  console.log('requestedReviewers', requestedReviewers)
+
+  console.log({ requestedReviewers, labels, rules })
+
+  rules.forEach(r => {
+    const matchesBot = requestedReviewers.includes(r.botName)
+    const matchesLabel =
+      !r.includeLabels.length || r.includeLabels.find(l => labels.includes(l))
+    const matchesIgnoredLabel = r.ignoreLabels.find(l => labels.includes(l))
+
+    console.log({ matchesBot, matchesLabel, matchesIgnoredLabel })
+    if (matchesBot && matchesLabel && !matchesIgnoredLabel) {
+      console.log('DO ACTION!!!')
+    }
+  })
   // console.log(
   //   await octokit.rest.pulls.requestReviewers({
   //     ...pullParams,
