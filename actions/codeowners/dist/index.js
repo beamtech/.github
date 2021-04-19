@@ -6086,17 +6086,20 @@ const run = async () => {
     })
     .data.map(l => l.name)
   console.log(labels)
-  const specificRequestedTeam = context.payload?.requested_team?.name
+  const specificRequestedTeam =
+    context.payload &&
+    context.payload.requested_team &&
+    context.payload.requested_team.name
   const requestedReviewers = specificRequestedTeam
     ? [specificRequestedTeam]
     : await octokit.rest.pulls.listRequestedReviewers(pullParams)
   console.log('requestedReviewers', requestedReviewers)
-  console.log(
-    await octokit.rest.pulls.requestReviewers({
-      ...pullParams,
-      team_reviewers: ['ownership_test'],
-    }),
-  )
+  // console.log(
+  //   await octokit.rest.pulls.requestReviewers({
+  //     ...pullParams,
+  //     team_reviewers: ['ownership_test'],
+  //   }),
+  // )
 }
 
 run()
