@@ -1,9 +1,9 @@
 {
   "name": "e2e-check-action",
-  "main": "main.js",
+  "main": "dist/index.js",
   "private": true,
   "scripts": {
-    "ncc": "ncc"
+    "build": "ncc build index.js"
   },
   "dependencies": {
     "@actions/core": "^1.2.6",
