@@ -24,6 +24,7 @@ console.log({ owner, repo })
 console.log(context)
 
 const run = async () => {
+  console.log(await octokit.rest.pulls.list(ownerAndRepo))
   // const listLabelsOnIssue = await octokit.issues.listLabelsOnIssue({
   //   ...ownerAndRepo,
   //   issue_number,
