@@ -6081,9 +6081,10 @@ const pullParams = {
 }
 
 const run = async () => {
+  console.log(issue_number, ownerAndRepo)
   const listLabelsOnIssue = await octokit.issues.listLabelsOnIssue({
     ...ownerAndRepo,
-    issue_number: issue_number,
+    issue_number,
   })
   console.log(listLabelsOnIssue)
   const labels = listLabelsOnIssue.data.map(l => l.name)
