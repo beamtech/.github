@@ -16,6 +16,12 @@ const run = async () => {
   console.log(labels)
   console.log(context.payload.requested_team.name)
   console.log(context)
+  octokit.rest.pulls.requestReviewers({
+    pull_number: context.issue.number,
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    team_reviewers: ['ownership_test'],
+  })
 }
 
 run()
