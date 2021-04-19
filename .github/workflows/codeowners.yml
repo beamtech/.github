@@ -2,7 +2,8 @@ name: Codeowners
 
 on:
   schedule:
-    - cron: '*/1 * * * *'
+    - cron: '* * * * *'
+
 jobs:
   codeowners:
     runs-on: [ubuntu-latest]
