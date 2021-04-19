@@ -1,6 +1,22 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 432:
+/***/ (() => {
+
+const rules = [
+  {
+    botName: 'ownership_bot_test',
+    ignoreLabels: [],
+    includeLabels: [],
+    memberTeamName: 'ownership_test',
+    delayMinutes: 15,
+  },
+]
+
+
+/***/ }),
+
 /***/ 517:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -6044,6 +6060,7 @@ var __webpack_exports__ = {};
 (() => {
 const github = __nccwpck_require__(831)
 const core = __nccwpck_require__(191)
+const rules = __nccwpck_require__(432)
 
 const { context } = github
 const { owner, repo } = context.repo
@@ -6051,22 +6068,35 @@ const { owner, repo } = context.repo
 const githubToken = core.getInput('githubToken')
 const octokit = github.getOctokit(githubToken)
 
+const ownerAndRepo = {
+  owner: context.repo.owner,
+  repo: context.repo.repo,
+}
+
+const pullParams = {
+  ...ownerAndRepo,
+  pull_number: context.issue.number,
+}
+
 const run = async () => {
-  const labels = await octokit.issues.listLabelsOnIssue({
-    issue_number: context.issue.number,
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-  })
+  const labels = await octokit.issues
+    .listLabelsOnIssue({
+      ...ownerAndRepo,
+      issue_number: context.issue.number,
+    })
+    .data.map(l => l.name)
   console.log(labels)
-  console.log(context.payload.requested_team.name)
-  console.log(context)
-  const result = await octokit.rest.pulls.requestReviewers({
-    pull_number: context.issue.number,
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-    team_reviewers: ['ownership_test'],
-  })
-  console.log(result)
+  const specificRequestedTeam = context.payload?.requested_team?.name
+  const requestedReviewers = specificRequestedTeam
+    ? [specificRequestedTeam]
+    : await octokit.rest.pulls.listRequestedReviewers(pullParams)
+  console.log('requestedReviewers', requestedReviewers)
+  console.log(
+    await octokit.rest.pulls.requestReviewers({
+      ...pullParams,
+      team_reviewers: ['ownership_test'],
+    }),
+  )
 }
 
 run()
