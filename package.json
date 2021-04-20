@@ -1,7 +1,14 @@
 {
   "name": "beam-github",
   "repository": "git@github.com:beamtech/.github.git",
+  "workspaces": [
+    "actions/*"
+  ],
   "dependencies": {
     "@beam-tech/eslint-config": "^5.0.2"
+  },
+  "engines": {
+    "node": "12.22.0",
+    "pnpm": ">=6.0.0 <7.0.0"
   }
 }
