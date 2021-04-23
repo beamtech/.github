@@ -1,0 +1,92 @@
+name: "e2e"
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  run-e2e:
+    runs-on: [ubuntu-latest]
+    if:  startsWith(github.event.comment.body, 'e2e start')
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.SERVICES_GITHUB_CI_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.SERVICES_GITHUB_CI_SECRET_KEY }}
+          aws-region: us-east-2
+
+      - name: Login to ECR
+        if: success()
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          registries: 932532311803
+
+      - name: Pull Image
+        if: success()
+        run: docker pull 932532311803.dkr.ecr.us-east-2.amazonaws.com/beamcli:stable
+
+      - name: Setup creds
+        if: success()
+        shell: bash
+        run: |
+          mkdir ${HOME}/.aws ${HOME}/.kube
+          echo "[default]" > ${HOME}/.aws/config
+          echo "region = us-east-1" >> ${HOME}/.aws/config
+          echo "[default]" > ${HOME}/.aws/credentials
+          echo "aws_access_key_id=$SERVICES_GITHUB_CI_ACCESS_KEY" >> ${HOME}/.aws/credentials
+          echo "aws_secret_access_key=$SERVICES_GITHUB_CI_SECRET_KEY" >> ${HOME}/.aws/credentials
+          echo "region = us-east-1" >> ${HOME}/.aws/credentials
+          echo "[beam-tech-org-services]" > ${HOME}/.aws/credentials
+          echo "aws_access_key_id=$SERVICES_GITHUB_CI_ACCESS_KEY" >> ${HOME}/.aws/credentials
+          echo "aws_secret_access_key=$SERVICES_GITHUB_CI_SECRET_KEY" >> ${HOME}/.aws/credentials
+          echo "region = us-east-1" >> ${HOME}/.aws/credentials
+          echo "role_session_name=github-ci" >> ${HOME}/.aws/credentials
+        env:
+          SERVICES_GITHUB_CI_SECRET_KEY: ${{ secrets.SERVICES_GITHUB_CI_SECRET_KEY }}
+          SERVICES_GITHUB_CI_ACCESS_KEY: ${{ secrets.SERVICES_GITHUB_CI_ACCESS_KEY }}
+
+      - name: Beam Get Kube Context
+        if: success()
+        shell: bash
+        run: |
+          docker run -t -v ${HOME}/.aws/:/root/.aws/ \
+                        -v ${HOME}/.kube/:/root/.kube/ \
+                        932532311803.dkr.ecr.us-east-2.amazonaws.com/beamcli:stable \
+                        --profile beam-tech-org-services eks get-config ephemeral_eks_cluster_b
+        env:
+          AWS_DEFAULT_REGION: us-east-1
+          AWS_REGION: us-east-1
+
+      - name: get upstream branch
+        id: extract-branch
+        run: |
+          echo "::set-output name=branch::$(curl -H 'Accept: application/vnd.github.sailor-v-preview+json' -H 'Authorization: Bearer ${{ secrets.SERVICE_ACCOUNT_GITHUB_TOKEN }}' ${{ github.event.issue.pull_request.url }} | jq '.head.ref' | sed 's/\"//g')"
+
+      - name: Launch E2E
+        id: launch-e2e
+        if: success()
+        shell: bash
+        run: |
+          echo "::set-output name=e2e_command_output::$(docker run -t -v ${HOME}/.aws/:/root/.aws/ -v ${HOME}/.kube/:/root/.kube/ -e AWS_PROFILE=default -e AWS_DEFAULT_REGION=us-east-1 932532311803.dkr.ecr.us-east-2.amazonaws.com/beamcli:stable ${{ github.event.comment.body }} --service ${{secrets.BEAM_APP_NAME}}:${BRANCH} | awk '/Pipeline URL.*/ {print}')"
+        env:
+          BRANCH: ${{ steps.extract-branch.outputs.branch }}
+
+      - name: Echo beam-cli Output
+        id: e2e-start-output
+        if: success()
+        run: |
+          echo "${{ steps.launch-e2e.outputs.e2e_command_output }}"
+
+      - name: Post Pipeline Status
+        if: success()
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.SERVICE_ACCOUNT_GITHUB_TOKEN}}
+          script: |
+            await github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "${{steps.launch-e2e.outputs.e2e_command_output}}"
+            })
