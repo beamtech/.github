@@ -1,3 +1,3 @@
-const { readDirSync } = require('fs')
+const { readdirSync } = require('fs')
 
-console.log(readDirSync(__dirname))
+console.log(readdirSync(__dirname))
