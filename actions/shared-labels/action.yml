@@ -1,5 +1,0 @@
-name: 'Add shared labels'
-description: 'some description'
-runs:
-  using: 'node12'
-  main: 'dist/index.js'
