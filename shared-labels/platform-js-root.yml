@@ -1,5 +1,4 @@
 area/platform:
-  - any: ['*', '!pnpm-lock.yaml']
   - '.eslintignore'
   - '.eslintrc.*'
   - '.prettierignore'
