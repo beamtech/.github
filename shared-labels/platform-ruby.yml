@@ -1,4 +1,4 @@
-area/platform:
+area/platform-ruby:
   - 'config.ru'
   - 'config/**/*'
   - 'lib/**/*'

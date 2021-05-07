@@ -1,4 +1,4 @@
-area/platform:
+area/platform-js:
   - '.eslintignore'
   - '.eslintrc.*'
   - '.prettierignore'

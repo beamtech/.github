@@ -1,4 +1,4 @@
-area/platform:
+area/platform-base:
   - '**/.dockerignore'
   - '**/Dockerfile'
   - '**/docker-compose.@(yml|yaml)'
