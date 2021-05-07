@@ -1,0 +1,13 @@
+area/platform:
+  - '**/.dockerignore'
+  - '**/Dockerfile'
+  - '**/docker-compose.@(yml|yaml)'
+  - 'migrations.yml'
+  - 'deployment-settings.yaml'
+  - 'scripts/**/*'
+  - '.buildkite/**/*'
+  - '.docker/**/*'
+  - '.dockerignore'
+  - '.github/**/*'
+  - '.githooks/**/*'
+  - 'helm/**/*'
