@@ -4,9 +4,9 @@ importers:
 
   .:
     specifiers:
-      '@beam-tech/eslint-config': ^5.1.0
+      '@beam-tech/eslint-config': ^6.0.0
     dependencies:
-      '@beam-tech/eslint-config': 5.1.0
+      '@beam-tech/eslint-config': 6.0.0
 
   actions/e2e-check:
     specifiers:
@@ -1050,14 +1050,15 @@ packages:
       to-fast-properties: 2.0.0
     dev: false
 
-  /@beam-tech/eslint-config/5.1.0:
-    resolution: {integrity: sha512-4AwKTKvJoMOzlyTNGWVRF2xwOSUVI4yuFoNwoDIKGflKCf5prPXLfgrk7eIt9STmLUTxlnXsNa87izBoJkJOHg==}
+  /@beam-tech/eslint-config/6.0.0:
+    resolution: {integrity: sha512-TsMVVk4BMcjtHYRd0vk8A+mrPeoUZaU/J+DR0UrmxuhVHpjHYU7mhDzJs51qxuyEy1RoYq8UHtlndnkhyB4uIw==}
     engines: {node: '>= v14.17.0'}
     peerDependencies:
       eslint: ^7.28.0
       eslint-plugin-fp: ^2.3.0
       eslint-plugin-import: ^2.23.4
       eslint-plugin-jest: ^24.3.6
+      eslint-plugin-jest-dom: ^3.9.0
       eslint-plugin-jsx-a11y: ^6.4.1
       eslint-plugin-no-unsanitized: ^3.1.5
       eslint-plugin-no-wildcard-postmessage: ^0.2.0
@@ -1069,6 +1070,7 @@ packages:
       eslint-plugin-security: ^1.4.0
       eslint-plugin-security-node: ^1.0.14
       eslint-plugin-segment-security: ^0.9.0
+      eslint-plugin-testing-library: ^4.6.0
     dependencies:
       babel-preset-airbnb: 5.0.0
       eslint-config-airbnb: 18.2.1
