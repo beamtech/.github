@@ -4,9 +4,9 @@ importers:
 
   .:
     specifiers:
-      '@beam-tech/eslint-config': ^5.1.0
+      '@beam-tech/eslint-config': ^5.1.1
     dependencies:
-      '@beam-tech/eslint-config': 5.1.0
+      '@beam-tech/eslint-config': 5.1.1
 
   actions/e2e-check:
     specifiers:
@@ -1050,8 +1050,8 @@ packages:
       to-fast-properties: 2.0.0
     dev: false
 
-  /@beam-tech/eslint-config/5.1.0:
-    resolution: {integrity: sha512-4AwKTKvJoMOzlyTNGWVRF2xwOSUVI4yuFoNwoDIKGflKCf5prPXLfgrk7eIt9STmLUTxlnXsNa87izBoJkJOHg==}
+  /@beam-tech/eslint-config/5.1.1:
+    resolution: {integrity: sha512-geQk0KbK6p2/DZP5JejVRbaaFjhrlMQEXk7zLQAad/mgDwyl6XHhVoakJZo9Q2+EiT97xT4b/t7r/9srsucCEQ==}
     engines: {node: '>= v14.17.0'}
     peerDependencies:
       eslint: ^7.28.0
