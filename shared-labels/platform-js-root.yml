@@ -9,7 +9,6 @@ area/platform:
   - '.nvmrc'
   - '.yarnrc'
   - '.pnpmfile.cjs'
-  - 'package.json'
   - 'commitlint.config.js'
   - 'lerna.json'
   - 'renovate.json'

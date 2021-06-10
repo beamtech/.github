@@ -1,3 +1,3 @@
 area/platform:
-  - any: ['*', '!pnpm-lock.yaml']
-  - any: ['.*', '!pnpm-lock.yaml']
+  - any: ['*', '!pnpm-lock.yaml', '!package.json']
+  - any: ['.*', '!pnpm-lock.yaml', '!package.json']
