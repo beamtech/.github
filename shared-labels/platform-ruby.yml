@@ -1,6 +1,6 @@
 area/platform:
   - 'config.ru'
-  - 'config/**/*'
+  - any: ['config/**/*', '!config/routes.rb']
   - 'lib/**/*'
   - 'spec/spec_helper.rb'
   - 'spec/rails_helper.rb'

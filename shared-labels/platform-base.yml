@@ -4,7 +4,7 @@ area/platform:
   - '**/docker-compose.@(yml|yaml)'
   - 'migrations.yml'
   - 'deployment-settings.yaml'
-  - 'scripts/**/*'
+  - any: ['scripts/**/*', '!scripts/one_time/**/*']
   - '.buildkite/**/*'
   - '.docker/**/*'
   - '.dockerignore'
