@@ -12,12 +12,12 @@ importers:
     specifiers:
       '@actions/core': ^1.4.0
       '@actions/github': ^4.0.0
-      '@vercel/ncc': ^0.28.6
+      '@vercel/ncc': ^0.29.0
     dependencies:
       '@actions/core': 1.4.0
       '@actions/github': 4.0.0
     devDependencies:
-      '@vercel/ncc': 0.28.6
+      '@vercel/ncc': 0.29.0
 
 packages:
 
@@ -1165,8 +1165,8 @@ packages:
       '@octokit/openapi-types': 6.0.0
     dev: false
 
-  /@vercel/ncc/0.28.6:
-    resolution: {integrity: sha512-t4BoSSuyK8BZaUE0gV18V6bkFs4st7baumtFGa50dv1tMu2GDBEBF8sUZaKBdKiL6DzJ2D2+XVCwYWWDcQOYdQ==}
+  /@vercel/ncc/0.29.0:
+    resolution: {integrity: sha512-p+sB835wOSDdgm2mgFgSOcXJF84AqZ+vBEnnGS0sm8veA92Hia7sqH0qEnqeFilPl+cXtxbdh2er+WdlfbVCZA==}
     hasBin: true
     dev: true
 
