@@ -11,11 +11,11 @@ importers:
   actions/e2e-check:
     specifiers:
       '@actions/core': ^1.4.0
-      '@actions/github': ^4.0.0
+      '@actions/github': ^5.0.0
       '@vercel/ncc': ^0.29.0
     dependencies:
       '@actions/core': 1.4.0
-      '@actions/github': 4.0.0
+      '@actions/github': 5.0.0
     devDependencies:
       '@vercel/ncc': 0.29.0
 
@@ -25,13 +25,13 @@ packages:
     resolution: {integrity: sha512-CGx2ilGq5i7zSLgiiGUtBCxhRRxibJYU6Fim0Q1Wg2aQL2LTnF27zbqZOrxfvFQ55eSBW0L8uVStgtKMpa0Qlg==}
     dev: false
 
-  /@actions/github/4.0.0:
-    resolution: {integrity: sha512-Ej/Y2E+VV6sR9X7pWL5F3VgEWrABaT292DRqRU6R4hnQjPtC/zD3nagxVdXWiRQvYDh8kHXo7IDmG42eJ/dOMA==}
+  /@actions/github/5.0.0:
+    resolution: {integrity: sha512-QvE9eAAfEsS+yOOk0cylLBIO/d6WyWIOvsxxzdrPFaud39G6BOkUwScXZn1iBzQzHyu9SBkkLSWlohDWdsasAQ==}
     dependencies:
       '@actions/http-client': 1.0.11
       '@octokit/core': 3.4.0
       '@octokit/plugin-paginate-rest': 2.13.3_@octokit+core@3.4.0
-      '@octokit/plugin-rest-endpoint-methods': 4.15.0_@octokit+core@3.4.0
+      '@octokit/plugin-rest-endpoint-methods': 5.4.1_@octokit+core@3.4.0
     dev: false
 
   /@actions/http-client/1.0.11:
@@ -1104,7 +1104,7 @@ packages:
   /@octokit/endpoint/6.0.11:
     resolution: {integrity: sha512-fUIPpx+pZyoLW4GCs3yMnlj2LfoXTWDUVPTC4V3MUEKZm48W+XYpeWSZCv+vYF1ZABUm2CqnDVf1sFtIYrj7KQ==}
     dependencies:
-      '@octokit/types': 6.13.0
+      '@octokit/types': 6.19.0
       is-plain-object: 5.0.0
       universal-user-agent: 6.0.0
     dev: false
@@ -1121,6 +1121,10 @@ packages:
     resolution: {integrity: sha512-CnDdK7ivHkBtJYzWzZm7gEkanA7gKH6a09Eguz7flHw//GacPJLmkHA3f3N++MJmlxD1Fl+mB7B32EEpSCwztQ==}
     dev: false
 
+  /@octokit/openapi-types/8.3.0:
+    resolution: {integrity: sha512-ZFyQ30tNpoATI7o+Z9MWFUzUgWisB8yduhcky7S4UYsRijgIGSnwUKzPBDGzf/Xkx1DuvUtqzvmuFlDSqPJqmQ==}
+    dev: false
+
   /@octokit/plugin-paginate-rest/2.13.3_@octokit+core@3.4.0:
     resolution: {integrity: sha512-46lptzM9lTeSmIBt/sVP/FLSTPGx6DCzAdSX3PfeJ3mTf4h9sGC26WpaQzMEq/Z44cOcmx8VsOhO+uEgE3cjYg==}
     peerDependencies:
@@ -1130,13 +1134,13 @@ packages:
       '@octokit/types': 6.13.0
     dev: false
 
-  /@octokit/plugin-rest-endpoint-methods/4.15.0_@octokit+core@3.4.0:
-    resolution: {integrity: sha512-1AF9GM/Ywk8ukUM5seDRj286GdFpdfsHeOrOPBV2rVtRN7MQNzRIcw8W5sb4JPerjQ0WcRRwAwQyufg64BxJkA==}
+  /@octokit/plugin-rest-endpoint-methods/5.4.1_@octokit+core@3.4.0:
+    resolution: {integrity: sha512-Nx0g7I5ayAYghsLJP4Q1Ch2W9jYYM0FlWWWZocUro8rNxVwuZXGfFd7Rcqi9XDWepSXjg1WByiNJnZza2hIOvQ==}
     peerDependencies:
       '@octokit/core': '>=3'
     dependencies:
       '@octokit/core': 3.4.0
-      '@octokit/types': 6.13.0
+      '@octokit/types': 6.19.0
       deprecation: 2.3.1
     dev: false
 
@@ -1163,6 +1167,12 @@ packages:
     resolution: {integrity: sha512-W2J9qlVIU11jMwKHUp5/rbVUeErqelCsO5vW5PKNb7wAXQVUz87Rc+imjlEvpvbH8yUb+KHmv8NEjVZdsdpyxA==}
     dependencies:
       '@octokit/openapi-types': 6.0.0
+    dev: false
+
+  /@octokit/types/6.19.0:
+    resolution: {integrity: sha512-9wdZFiJfonDyU6DjIgDHxAIn92vdSUBOwAXbO2F9rOFt6DJwuAkyGLu1CvdJPphCbPBoV9iSDMX7y4fu0v6AtA==}
+    dependencies:
+      '@octokit/openapi-types': 8.3.0
     dev: false
 
   /@vercel/ncc/0.29.0:
