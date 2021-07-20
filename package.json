@@ -8,7 +8,7 @@
     "@beam-tech/eslint-config": "^6.0.0"
   },
   "engines": {
-    "node": "12.22.0",
+    "node": "14.17.3",
     "pnpm": ">=6.0.0 <7.0.0"
   }
 }
